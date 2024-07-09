@@ -1,0 +1,7 @@
+tab_width = 4
+indent_size = 4
+indent_style = space
+
+[*.{yml,yaml}]
+tab_width = 2
+indent_size = 2

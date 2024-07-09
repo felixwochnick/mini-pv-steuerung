@@ -1,0 +1,101 @@
+export interface Device {
+    id: number
+    deviceKey: string
+    snNumber: string
+    name: string
+    productId: number
+    productKey: string
+    onlineFlag: string
+    productName: string
+    wifiStatus: boolean
+    blueState: boolean
+    fourGStatus: boolean
+    isShareFlag: string
+    input: boolean
+    output: boolean
+    electricity: number
+    restState: number
+    upsMode: boolean
+    upgradeStatusDes: string
+    productType: number
+    upgradeStatus: object
+    bindId: number
+    bindStatus: number
+    batteryCode: string
+    packList: any[]
+    inputPower: number
+    outputPower: number
+    slowChargePower: number
+    temperature: number
+    temperatureUnit: number
+    remainOutTime: number
+    bindType: number
+    seriesMode: number
+    parallelMode: number
+    networkType: number
+    standard: string
+    isSwitch: boolean
+    url: string
+    remainOil: number
+    genMode: number
+    shortCode: string
+    phaseCheck: number
+    clusterList: any[]
+    clusterNotice: boolean
+    nodeStatus: number
+    clusterId: null | number
+    phase: null | number
+}
+
+export interface Message {
+    messageId: string
+    product: string
+    deviceId: string
+    timestamp: number
+    properties: {
+        packNum?: number
+        masterSwitch?: number
+        electricLevel?: number
+        wifiState?: number
+        buzzerSwitch?: number
+        socSet?: number
+        solarInputPower?: number
+        packInputPower?: number
+        outputPackPower?: number
+        outputHomePower?: number
+        outputLimit?: number
+        inputLimit?: number
+        remainOutTime?: number
+        remainInputTime?: number
+        packState?: number
+        hubState?: number
+        masterSoftVersion?: number
+        masterhaerVersion?: number
+        inputMode?: number
+        blueOta?: number
+        pvBrand?: number
+        pass?: number
+        minSoc?: number
+        inverseMaxPower?: number
+        autoModel?: number
+        gridPower?: number
+        smartMode?: number
+        smartPower?: number
+        passMode?: number
+        autoRecover?: number
+        solarPower2?: number
+        solarPower1?: number
+        heatState?: number
+    }
+    packData?: Array<{
+        sn?: string
+        power?: number
+        socLevel?: number
+        state?: number
+        maxTemp?: number
+        totalVol?: number
+        maxVol?: number
+        minVol?: number
+        softVersion?: number
+    }>
+}
