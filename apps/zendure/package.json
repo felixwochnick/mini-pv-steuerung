@@ -1,18 +1,21 @@
 {
-  "name": "@mini-pv-steuerung/zendure",
-  "module": "index.ts",
-  "type": "module",
-  "scripts": {
-    "dev": "NODE_ENV=development bun run --watch index.ts",
-    "server": "bun run index.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "mqtt": "^5.8.0"
-  }
+    "name": "@mini-pv-steuerung/zendure",
+    "version": "0.1",
+    "module": "index.ts",
+    "type": "module",
+    "scripts": {
+        "dev": "NODE_ENV=development bun run --watch index.ts",
+        "server": "bun run index.ts",
+        "build-adapter": "bun build ./index.ts --compile --outfile zendure",
+        "build-adapter-docker": "docker build . --tag ghcr.io/felixwochnick/mini-pv-steuerung/zendure:latest --tag ghcr.io/felixwochnick/mini-pv-steuerung/zendure:`bun -e \"Bun.file('./package.json').text().then(v => console.log(JSON.parse(v).version))\"`"
+    },
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "mqtt": "^5.8.0"
+    }
 }
