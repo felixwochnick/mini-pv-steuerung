@@ -7,7 +7,7 @@
         "dev": "NODE_ENV=development bun run --watch index.ts",
         "server": "bun run index.ts",
         "build-adapter": "bun build ./index.ts --compile --outfile zendure",
-        "build-adapter-docker": "docker build . --tag ghcr.io/felixwochnick/mini-pv-steuerung/zendure:latest --tag ghcr.io/felixwochnick/mini-pv-steuerung/zendure:`bun -e \"Bun.file('./package.json').text().then(v => console.log(JSON.parse(v).version))\"`"
+        "build-adapter-docker": "docker build . --tag minipvsteuerung/zendure:latest --tag minipvsteuerung/zendure:`bun -e \"Bun.file('./package.json').text().then(v => console.log(JSON.parse(v).version))\"`"
     },
     "devDependencies": {
         "@types/bun": "latest"

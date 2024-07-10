@@ -6,9 +6,71 @@
         <template #default>
             <UPageHeader title="Einstellungen" />
             <UPageBody class="space-y-4">
-                <h2 id="generally">Allgemein</h2>
-                <div></div>
-                <h2 id="devices">Geräte</h2>
+                <h2 id="generally" class="text-xl font-bold">Allgemein</h2>
+                <div class="flex flex-col gap-4">
+                    <div class="flex gap-4 items-center">
+                        <span>
+                            Webseite in nicht über das öffentliche Netzwerk
+                            erreichbar <UBadge label="Bald" color="gray" />
+                        </span>
+                        <span class="flex-grow" />
+                        <UToggle
+                            v-model="websitePublic"
+                            class="place-self-center"
+                            disabled
+                        />
+                    </div>
+                </div>
+                <h2 id="devices" class="text-xl font-bold">Sicherheit</h2>
+                <div class="flex flex-col gap-4">
+                    <div class="flex gap-4 items-center">
+                        <span>
+                            Authentifizierung erforderlich über Benutzername und
+                            Passwort
+                            <UBadge label="Bald" color="gray" />
+                        </span>
+                        <span class="flex-grow" />
+                        <UToggle
+                            v-model="authenticationEnabled"
+                            class="place-self-center"
+                            disabled
+                        />
+                    </div>
+                    <div class="flex gap-4 items-center">
+                        <span>
+                            Webseite nur über HTTPS erreichbar
+                            <UBadge label="Bald" color="gray" />
+                        </span>
+                        <span class="flex-grow" />
+                        <UToggle
+                            v-model="https"
+                            class="place-self-center"
+                            disabled
+                        />
+                    </div>
+                </div>
+                <h2 id="devices" class="text-xl font-bold">Finazen</h2>
+                <div class="flex flex-col gap-4">
+                    <div class="flex gap-4 items-center">
+                        <span> Aktueller Strompreis [€/kWh] </span>
+                        <span class="flex-grow" />
+                        <UInput
+                            class="w-32"
+                            placeholder="0,40"
+                            trailingIcon="i-ph-currency-eur"
+                        />
+                    </div>
+                    <div class="flex gap-4 items-center">
+                        <span> Gesamtinvestitionsbetrag </span>
+                        <span class="flex-grow" />
+                        <UInput
+                            class="w-32"
+                            placeholder="1800,45"
+                            trailingIcon="i-ph-currency-eur"
+                        />
+                    </div>
+                </div>
+                <h2 id="devices" class="text-xl font-bold">Geräte</h2>
                 <UButton
                     icon="i-ph-plus-bold"
                     block
@@ -16,78 +78,18 @@
                 >
                     Gerät hinzufügen
                 </UButton>
-                <h2 id="devices">Adapter</h2>
+                <h2 id="adapter" class="text-xl font-bold">Adapter</h2>
             </UPageBody>
         </template>
         <template #right></template>
     </UPage>
-    <UModal v-model="modalAddDevice">
-        <UCard
-            :ui="{
-                ring: '',
-                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-                body: {
-                    base: 'relative pt-[2.5rem_!important]'
-                },
-                footer: {
-                    base: 'flex gap-4'
-                }
-            }"
-        >
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h3
-                        class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
-                    >
-                        Gerät hinzufügen
-                    </h3>
-                    <UButton
-                        color="gray"
-                        variant="ghost"
-                        icon="i-heroicons-x-mark-20-solid"
-                        class="-my-1"
-                        @click="modalAddDevice = false"
-                    />
-                </div>
-            </template>
-
-            <template #default>
-                <UProgress
-                    size="2xs"
-                    :value="addDeviceStep"
-                    :max="['Adapter hinzufügen', 'Gerät einrichten', 'Fertig']"
-                    class="absolute top-0 left-0 right-0"
-                    :ui="{
-                        steps: {
-                            base: 'mr-6'
-                        }
-                    }"
-                />
-                Test
-            </template>
-
-            <template #footer>
-                <UButton
-                    icon="i-ph-x-bold"
-                    color="gray"
-                    variant="ghost"
-                    label="Abbrechen"
-                />
-                <span class="flex-grow" />
-                <UButton
-                    icon="i-ph-arrow-arc-right-bold"
-                    color="gray"
-                    variant="ghost"
-                    label="Überspringen"
-                />
-                <UButton icon="i-ph-arrow-right-bold" label="Weiter" />
-            </template>
-        </UCard>
-    </UModal>
+    <AddDevice v-model="modalAddDevice" />
 </template>
 
 <script setup lang="ts">
-const modalAddDevice = ref(false)
+const websitePublic = ref(false)
+const authenticationEnabled = ref(false)
+const https = ref(false)
 
-const addDeviceStep = ref(0)
+const modalAddDevice = ref(false)
 </script>
