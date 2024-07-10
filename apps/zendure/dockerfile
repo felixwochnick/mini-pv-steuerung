@@ -1,0 +1,10 @@
+FROM oven/bun:latest
+
+EXPOSE 8080
+
+WORKDIR /app
+
+COPY zendure .
+COPY schema.yml .
+
+CMD ["./zendure"]

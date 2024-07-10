@@ -1,5 +1,5 @@
 import { registerHandler, startServer } from '@mini-pv-steuerung/server'
-import { connect, env } from 'bun'
+import { env } from 'bun'
 import mqtt from 'mqtt'
 import type { Device, Message } from './types'
 
@@ -17,9 +17,59 @@ const data = {
     temperatureBattery: 0
 }
 
-registerHandler('get', '/pv/power', async function (req) {
-    return new Response('1234')
-})
+registerHandler(
+    'get',
+    '/status/connected',
+    async () => new Response(data.connected.toString())
+)
+
+registerHandler(
+    'get',
+    '/power/pv',
+    async () => new Response(data.powerPv.toString())
+)
+
+registerHandler(
+    'get',
+    '/power/pv1',
+    async () => new Response(data.powerPv1.toString())
+)
+
+registerHandler(
+    'get',
+    '/power/pv2',
+    async () => new Response(data.powerPv2.toString())
+)
+
+registerHandler(
+    'get',
+    '/power/out',
+    async () => new Response(data.powerOutput.toString())
+)
+
+registerHandler(
+    'get',
+    '/power/battery/out',
+    async () => new Response(data.powerBatteryOut.toString())
+)
+
+registerHandler(
+    'get',
+    '/power/battery/in',
+    async () => new Response(data.powerBatteryIn.toString())
+)
+
+registerHandler(
+    'get',
+    '/soc/battery',
+    async () => new Response(data.socBattery.toString())
+)
+
+registerHandler(
+    'get',
+    '/temperature/battery',
+    async () => new Response(data.temperatureBattery.toString())
+)
 
 startServer()
 
@@ -62,13 +112,13 @@ async function init() {
         password: 'H6s$j9CtNa0N'
     })
 
-    mqttClient.on('connect', (...args) => {
-        console.log('connected', args)
+    mqttClient.on('connect', () => {
         data.connected = true
     })
 
-    mqttClient.on('error', (...args) => {
-        console.log('error', args)
+    mqttClient.on('error', error => {
+        if (!error) return
+        console.error(error)
         data.connected = false
     })
 
@@ -96,18 +146,12 @@ async function init() {
     mqttClient.subscribe(
         `/${device.productKey}/${device.deviceKey}/properties/report`,
         error => {
-            console.log('error', error)
+            if (!error) return
+            console.error(error)
         }
     )
 
     triggerFullUpdate(mqttClient, device)
-
-    // mqttClient.subscribe(
-    //     `iot/${device.productKey}/${device.deviceKey}/#`,
-    //     error => {
-    //         console.log('error', error)
-    //     }
-    // )
 
     return function stop() {
         data.connected = false

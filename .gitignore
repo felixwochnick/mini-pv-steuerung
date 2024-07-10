@@ -27,6 +27,8 @@ out/
 build
 dist
 
+.nuxt/
+
 
 # Debug
 npm-debug.log*

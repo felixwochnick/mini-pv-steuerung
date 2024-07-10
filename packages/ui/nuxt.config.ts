@@ -28,5 +28,8 @@ export default defineNuxtConfig({
             }
         ],
         defaultTimezone: 'Europe/Berlin'
+    },
+    ui: {
+        icons: ['heroicons', 'ph']
     }
 })

@@ -17,12 +17,27 @@
   name: Aktuelle Leistung MPP Tracker 2
   unit: W
 
-- path: /power/battery
+- path: /power/battery/in
   method: get
-  name: Aktuelle Leistung der Batterie
+  name: Aktuelle Lade-Leistung der Batterie
+  unit: W
+
+- path: /power/battery/out
+  method: get
+  name: Aktuelle Entlade-Leistung der Batterie
   unit: W
 
 - path: /power/out
   method: get
   name: Aktuelle Leistung am Ausgang
   unit: W
+
+- path: /soc/battery
+  method: get
+  name: Batterie-Ladezustand
+  unit: '%'
+
+- path: /temperature/battery
+  method: get
+  name: Batterie-Temperatur
+  unit: '°C'
