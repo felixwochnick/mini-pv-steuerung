@@ -1,43 +1,50 @@
-- path: /status/connected
-  method: get
-  name: Verbunden
+container:
+  env:
+    - USERNAME
+    - PASSWORD
+    - SERIAL_NUMBER
 
-- path: /power/pv
-  method: get
-  name: Aktuelle PV Leistung
-  unit: W
+endpoints:
+  - path: /status/connected
+    method: get
+    name: Verbunden
 
-- path: /power/pv/1
-  method: get
-  name: Aktuelle Leistung MPP Tracker 1
-  unit: W
+  - path: /power/pv
+    method: get
+    name: Aktuelle PV Leistung
+    unit: W
 
-- path: /power/pv/2
-  method: get
-  name: Aktuelle Leistung MPP Tracker 2
-  unit: W
+  - path: /power/pv/1
+    method: get
+    name: Aktuelle Leistung MPP Tracker 1
+    unit: W
 
-- path: /power/battery/in
-  method: get
-  name: Aktuelle Lade-Leistung der Batterie
-  unit: W
+  - path: /power/pv/2
+    method: get
+    name: Aktuelle Leistung MPP Tracker 2
+    unit: W
 
-- path: /power/battery/out
-  method: get
-  name: Aktuelle Entlade-Leistung der Batterie
-  unit: W
+  - path: /power/battery/in
+    method: get
+    name: Aktuelle Lade-Leistung der Batterie
+    unit: W
 
-- path: /power/out
-  method: get
-  name: Aktuelle Leistung am Ausgang
-  unit: W
+  - path: /power/battery/out
+    method: get
+    name: Aktuelle Entlade-Leistung der Batterie
+    unit: W
 
-- path: /soc/battery
-  method: get
-  name: Batterie-Ladezustand
-  unit: '%'
+  - path: /power/out
+    method: get
+    name: Aktuelle Leistung am Ausgang
+    unit: W
 
-- path: /temperature/battery
-  method: get
-  name: Batterie-Temperatur
-  unit: '°C'
+  - path: /soc/battery
+    method: get
+    name: Batterie-Ladezustand
+    unit: "%"
+
+  - path: /temperature/battery
+    method: get
+    name: Batterie-Temperatur
+    unit: "°C"

@@ -75,19 +75,11 @@ startServer()
 
 let stop = await init()
 
-if (!stop) {
-    throw new Error(`Can't start!`)
-}
-
 setInterval(
     async () => {
         stop?.()
 
         stop = await init()
-
-        if (!stop) {
-            throw new Error(`Can't start!`)
-        }
     },
     1000 * 60 * 60 * 2
 )
