@@ -142,7 +142,13 @@ const modelValue = useVModel(props, 'modelValue', emit)
 const step = ref(0)
 const adapterSchema = z.object({
     image: z.string().min(1, 'Bitte wählen Sie einen Adapter aus'),
-    name: z.string().optional()
+    name: z
+        .string()
+        .regex(/^[a-z0-9-]+$/, {
+            message:
+                'Der Name darf nur Kleinbuchstaben, Zahlen und Striche enthalten'
+        })
+        .or(z.literal(''))
 })
 const adapterForm = reactive({
     image: '',
@@ -224,7 +230,8 @@ async function nextStep() {
             }))
         )
             return
-        executeStartContainer()
+        step.value++
+        await executeStartContainer()
     }
 
     step.value++
