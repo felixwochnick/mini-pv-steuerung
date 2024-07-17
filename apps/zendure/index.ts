@@ -1,5 +1,5 @@
 import { registerHandler, startServer } from '@mini-pv-steuerung/server'
-import { env } from 'bun'
+import { connect, env } from 'bun'
 import mqtt from 'mqtt'
 import type { Device, Message } from './types'
 
@@ -16,6 +16,35 @@ const data = {
     socBattery: 0,
     temperatureBattery: 0
 }
+
+registerHandler(
+    'get',
+    '/',
+    async () =>
+        new Response(
+            JSON.stringify({
+                status: {
+                    connected: data.connected
+                },
+                power: {
+                    '': data.powerPv,
+                    '1': data.powerPv1,
+                    '2': data.powerPv2,
+                    out: data.powerOutput,
+                    battery: {
+                        out: data.powerBatteryOut,
+                        in: data.powerBatteryIn
+                    }
+                },
+                soc: {
+                    battery: data.socBattery
+                },
+                temperature: {
+                    battery: data.temperatureBattery
+                }
+            })
+        )
+)
 
 registerHandler(
     'get',

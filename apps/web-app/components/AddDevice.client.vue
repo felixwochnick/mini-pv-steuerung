@@ -39,6 +39,7 @@
                         'Adapter auswählen',
                         'Adapter starten',
                         'Gerät einrichten',
+                        'Gerät wird hinzugefügt',
                         'Fertig'
                     ]"
                     class="absolute top-0 left-0 right-0"
@@ -63,6 +64,14 @@
                     />
                     <AddDeviceStep3
                         v-if="step === 3"
+                        @next-step="nextStep"
+                    />
+                    <AddDeviceStep4
+                        v-if="step === 4"
+                        @next-step="nextStep"
+                    />
+                    <AddDeviceStep5
+                        v-if="step === 5"
                         @next-step="nextStep"
                     />
                 </div>
@@ -120,15 +129,6 @@ const onTriggerNextStep = ref(() => {})
 provide('loading', loading)
 provide('data', data)
 provide('onTriggerNextStep', onTriggerNextStep)
-
-watchEffect(() => {
-    console.log('step', step.value)
-    console.log('data', data.value)
-})
-
-watchEffect(() => {
-    console.log('loading', loading.value)
-})
 
 function cancel() {
     step.value = -1

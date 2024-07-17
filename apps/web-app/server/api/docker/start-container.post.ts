@@ -86,7 +86,7 @@ export default defineEventHandler(async event => {
         const schema = parse(data) as TSchema
 
         return {
-            name: (await container.inspect()).Name,
+            name,
             id: container.id,
             schema
         }
