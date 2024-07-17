@@ -11,8 +11,6 @@ export default defineEventHandler(async event => {
         return setResponseStatus(event, 400, 'Missing containerId')
     if (!body.config) return setResponseStatus(event, 400, 'Missing config')
 
-    console.log(body.config)
-
     const docker = useDocker()
 
     const container = docker.getContainer(body.containerId)

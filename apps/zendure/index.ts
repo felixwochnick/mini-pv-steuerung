@@ -27,9 +27,11 @@ registerHandler(
                     connected: data.connected
                 },
                 power: {
-                    '': data.powerPv,
-                    '1': data.powerPv1,
-                    '2': data.powerPv2,
+                    pv: {
+                        '': data.powerPv,
+                        '1': data.powerPv1,
+                        '2': data.powerPv2
+                    },
                     out: data.powerOutput,
                     battery: {
                         out: data.powerBatteryOut,
