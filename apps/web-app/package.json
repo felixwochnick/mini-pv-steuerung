@@ -1,19 +1,22 @@
 {
   "name": "@mini-pv-steuerung/web-app",
-  "private": true,
+  "version": "0.9.0",
+  "private": false,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build-app": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "build-app-docker": "docker build . --tag minipvsteuerung/web:latest --tag minipvsteuerung/web:`bun -e \"Bun.file('./package.json').text().then(v => console.log(JSON.parse(v).version))\"`"
   },
   "dependencies": {
     "@iconify-json/ph": "^1.1.13",
     "dockerode": "2.5.5",
     "nuxt": "^3.12.3",
     "vue": "latest",
+    "yaml": "^2.4.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

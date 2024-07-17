@@ -7,6 +7,13 @@
         "build-adapter-docker": {
             "dependsOn": ["build-adapter"],
             "cache": false
+        },
+        "build-app": {
+            "cache": false
+        },
+        "build-app-docker": {
+            "dependsOn": ["build-app"],
+            "cache": false
         }
     }
 }

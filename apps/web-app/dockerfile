@@ -1,10 +1,7 @@
 FROM oven/bun:latest
 
-EXPOSE 8080
+EXPOSE 3000
 
-WORKDIR /app
+COPY .output /app
 
-COPY zendure .
-COPY schema.yml .
-
-CMD ["./zendure"]
+CMD ["bun", "/app/server/index.mjs"]

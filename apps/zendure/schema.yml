@@ -1,8 +1,11 @@
 container:
   env:
-    - USERNAME
-    - PASSWORD
-    - SERIAL_NUMBER
+    - name: USERNAME
+      description: Benutzername des Zendure Accounts
+    - name: PASSWORD
+      description: Passwort des Zendure Accounts
+    - name: SERIAL_NUMBER
+      description: Seriennummer des Zendure Geräts
 
 endpoints:
   - path: /status/connected

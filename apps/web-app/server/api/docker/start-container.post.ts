@@ -1,3 +1,20 @@
+import { parse } from 'yaml'
+
+type TSchema = {
+    container: {
+        env: Array<{
+            name: string
+            description: string
+        }>
+    }
+    endpoints: Array<{
+        path: string
+        method: string
+        name: string
+        unit?: string
+    }>
+}
+
 export default defineEventHandler(async event => {
     const body = await readBody<{ image?: string; name?: string }>(event)
 
@@ -21,7 +38,7 @@ export default defineEventHandler(async event => {
             })
         }
 
-        const name = body.name || 'mini-pv-steuerung-adapter'
+        const _name = body.name || 'mini-pv-steuerung-adapter'
 
         const containers = await docker
             .listContainers({
@@ -29,30 +46,49 @@ export default defineEventHandler(async event => {
             })
             .then(containers =>
                 containers.filter(container =>
-                    container.Names.find(n => new RegExp(name, 'ig').test(n))
+                    container.Names.find(n => new RegExp(_name, 'ig').test(n))
                 )
             )
 
+        const name =
+            containers.length == 0 ? _name : `${_name}-${containers.length + 1}`
+
         const container = await docker.createContainer({
             Image: body.image,
-            name:
-                containers.length == 0
-                    ? name
-                    : `${name}-${containers.length + 1}`,
+            name,
             NetworkingConfig: {
                 EndpointsConfig: {
                     [runtimeConfig.dockerInternalNetwork]: {}
+                }
+            },
+            HostConfig: {
+                RestartPolicy: {
+                    Name: 'unless-stopped'
                 }
             }
         })
 
         await container.start()
 
-        // const data = await $fetch()
+        const data = await new Promise<string>(resolve => {
+            const interval = setInterval(async () => {
+                try {
+                    const data = await $fetch<string>(
+                        `http://${name}:8080/schema.yml`
+                    )
+
+                    clearInterval(interval)
+                    resolve(data)
+                } catch (error) {}
+            }, 500)
+        })
+
+        const schema = parse(data) as TSchema
 
         return {
             name: (await container.inspect()).Name,
-            id: container.id
+            id: container.id,
+            schema
         }
     } catch (error) {
         console.error(error)

@@ -48,49 +48,24 @@
                         }
                     }"
                 />
-                <template v-if="step == 1">
-                    <div class="text-sm text-justify">
-                        Dieses Programm wird die Daten über z.B. Leistung über
-                        eine HTTP-API von ihrem Gerät (z.B. Wechselrichter)
-                        abrufen.
-                    </div>
-                    <div class="text-sm text-justify">
-                        Wenn Sie ein Gerät hinzufügen wollen, der noch keine
-                        HTTP-API hat oder Sie die API nicht konfigurieren
-                        wollen, können Sie einen Adapter auswählen, der die
-                        Kommunikation mit dem Gerät übernimmt.
-                    </div>
-                    <div class="text-sm text-justify">
-                        Falls Sie ein Gerät hinzufügen wollen, an dem keine
-                        Werte gemessen werden (z.B. Solarzellen), oder Sie
-                        bereits eine HTTP-API konfiguriert haben, können Sie
-                        diesen Schritt überspringen.
-                    </div>
-                    <UForm
-                        :schema="adapterSchema"
-                        :state="adapterForm"
-                        ref="refAdapterForm"
-                        class="space-y-4"
-                    >
-                        <UFormGroup label="Adapter" name="image" required>
-                            <USelectMenu
-                                searchable
-                                searchable-placeholder="Adapter suchen"
-                                class="w-full"
-                                placeholder="Adapter auswählen"
-                                :options="dataImages"
-                                v-model="adapterForm.image"
-                            />
-                        </UFormGroup>
-                        <UFormGroup label="Adaptername" name="name">
-                            <UInput
-                                class="w-full"
-                                placeholder="Name des Adapters"
-                                v-model="adapterForm.name"
-                            />
-                        </UFormGroup>
-                    </UForm>
-                </template>
+                <div>
+                    <AddDeviceStep0
+                        v-if="step === 0"
+                        @next-step="nextStep"
+                    />
+                    <AddDeviceStep1
+                        v-if="step === 1"
+                        @next-step="nextStep"
+                    />
+                    <AddDeviceStep2
+                        v-if="step === 2"
+                        @next-step="nextStep"
+                    />
+                    <AddDeviceStep3
+                        v-if="step === 3"
+                        @next-step="nextStep"
+                    />
+                </div>
             </template>
 
             <template #footer>
@@ -116,7 +91,7 @@
                     icon="i-ph-arrow-right-bold"
                     label="Weiter"
                     :loading="loading"
-                    @click="nextStep"
+                    @click="triggerNextStep"
                 />
             </template>
         </UCard>
@@ -125,8 +100,6 @@
 
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
-import { z } from 'zod'
-import type { Form } from '#ui/types'
 
 const props = defineProps({
     modelValue: {
@@ -139,78 +112,27 @@ const emit = defineEmits()
 
 const modelValue = useVModel(props, 'modelValue', emit)
 
-const step = ref(0)
-const adapterSchema = z.object({
-    image: z.string().min(1, 'Bitte wählen Sie einen Adapter aus'),
-    name: z
-        .string()
-        .regex(/^[a-z0-9-]+$/, {
-            message:
-                'Der Name darf nur Kleinbuchstaben, Zahlen und Striche enthalten'
-        })
-        .or(z.literal(''))
-})
-const adapterForm = reactive({
-    image: '',
-    name: ''
-})
-const refAdapterForm = ref<Form<typeof adapterForm>>()
+const step = ref(-1)
+const data = ref({})
+const loading = ref(false)
+const onTriggerNextStep = ref(() => {})
 
-const {
-    data: dataImages,
-    status: statusImages,
-    execute: executeImages,
-    clear: clearImages
-} = useFetch('/api/docker/get-available-images', {
-    query: {
-        repository: 'minipvsteuerung'
-    },
-    lazy: true,
-    immediate: false
+provide('loading', loading)
+provide('data', data)
+provide('onTriggerNextStep', onTriggerNextStep)
+
+watchEffect(() => {
+    console.log('step', step.value)
+    console.log('data', data.value)
 })
 
-const {
-    data: dataStartContainer,
-    status: statusStartContainer,
-    execute: executeStartContainer,
-    clear: clearStartContainer
-} = useAsyncData(
-    'start-container',
-    () =>
-        $fetch('/api/docker/start-container', {
-            method: 'POST',
-            body: {
-                image: adapterForm.image,
-                name: adapterForm.name
-            }
-        }),
-    {
-        immediate: false,
-        lazy: true
-    }
-)
-
-const loading = computed(
-    () =>
-        statusImages.value === 'pending' ||
-        statusStartContainer.value === 'pending'
-)
-
-watch(modelValue, async (value, old) => {
-    if (value && !old) {
-        await executeImages()
-        step.value = 1
-    }
+watchEffect(() => {
+    console.log('loading', loading.value)
 })
 
 function cancel() {
-    step.value = 0
+    step.value = -1
     modelValue.value = false
-
-    clearImages()
-    adapterForm.image = ''
-    adapterForm.name = ''
-    clearStartContainer()
 }
 
 function bypass() {
@@ -222,18 +144,16 @@ function bypass() {
     step.value++
 }
 
-async function nextStep() {
-    if (step.value == 1) {
-        if (
-            !(await refAdapterForm.value?.validate(['image', 'name'], {
-                silent: true
-            }))
-        )
-            return
-        step.value++
-        await executeStartContainer()
-    }
+function triggerNextStep() {
+    console.log(onTriggerNextStep.value)
+    onTriggerNextStep.value()
+}
 
+function nextStep() {
     step.value++
 }
+
+watch(modelValue, (n: boolean, o: boolean) => {
+    if (n && !o) step.value = 0
+})
 </script>

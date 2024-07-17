@@ -5,5 +5,5 @@ export default defineNuxtConfig({
     extends: ['@mini-pv-steuerung/ui'],
     runtimeConfig: {
         dockerInternalNetwork: 'mini-pv-steuerung'
-    }
+    },
 })
